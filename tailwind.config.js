@@ -7,7 +7,15 @@ module.exports = {
   ],
   theme: {
     
-    extend: {},
+    extend: {
+      fontFamily: {
+        inter: ['Inter', 'sans-serif'],
+        satoshi: ['Satoshi', 'sans-serif'],
+      },
+      colors: {
+        'primary-orange': '#FF5722',
+    },
   },
   plugins: [],
+}
 }
