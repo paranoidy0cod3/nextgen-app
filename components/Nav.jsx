@@ -3,19 +3,19 @@
  import Image from "next/image";
  import {useState, useEffect} from "react";
  import {signIn, signOut, useSession, getProviders} from "next-auth/react";
-import { set } from "mongoose";
+
 
 
 const Nav = () => {
-  const isLoggedIn = true;
+  const {data: session} = useSession()
   const [providers, setProviders] = useState(null)
   const [toggle, setToggle] = useState(false)
   useEffect(() => {
-    const setProviders = async () => {
+    const setUpProviders = async () => {
       const response = await getProviders()
       setProviders(response)  
     }
-    setProviders()  
+    setUpProviders()    
   }, [])
   return (
     <nav className="flex-between w-full mb-16 pt-3">
@@ -27,7 +27,7 @@ const Nav = () => {
       </Link>
       {/* Desktop Navigation */}
       <div className="sm:flex hidden">
-        {isLoggedIn ? (
+        {session?.user ? (
           <div className="flex gap-3 md:gap-5">
             <Link href="/create-prompt" className="black_btn" >
               Create Post
@@ -36,7 +36,7 @@ const Nav = () => {
               Sign Out
             </button>
             <Link href="/profile">
-            👤
+            <Image src={session.user.image} alt="user image" width={35} height={35} className="rounded-full" onClick={()=>setToggle(!toggle)}/>
             </Link>
           </div>
         ): 
@@ -52,10 +52,9 @@ const Nav = () => {
       </div> 
       {/* Mobile Navigation */}
       <div className="sm:hidden flex relative">
-        {isLoggedIn ? (
-          <div className="flex bg-blue-300 rounded-full p-2" 
-          onClick={()=>setToggle((prev)=> !prev)}>
-            👤
+        {session?.user ? (
+          <div className="flex" >
+            <Image src={session.user.image} alt="user image" width={35} height={35} className="rounded-full" onClick={()=>setToggle(!toggle)}/>
             {toggle && (
             <div className="dropdown">
             <Link href="/profile" className="dropdown_link"
